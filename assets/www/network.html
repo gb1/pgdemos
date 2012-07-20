@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html manifest="" lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <title>Call SAP Gateway</title>
+    <link rel="stylesheet" type="text/css" href="css/styles.css" />
+    <script type="text/javascript" charset="utf-8" src="cordova-1.8.1.js"></script>
+    <script type="text/javascript" charset="utf-8">
+    
+    // Wait for Cordova to load
+    //
+    document.addEventListener("deviceready", onDeviceReady, false);
+	
+
+	// Cordova is ready let's get stated with the database stuff
+    //
+    function onDeviceReady(){
+	    // enable the button now that the device is ready
+	    document.getElementById('btnKlick').disabled = false;
+	}
+	
+	function readConnection(){
+		var networkState = navigator.network.connection.type;
+		
+		var states = {};
+		states[Connection.UNKNOWN] = 'Unknown connection';
+		states[Connection.ETHERNET] = 'Ethernet connection';
+		states[Connection.WIFI] = 'WiFi connection';
+		states[Connection.CELL_2G] = 'Cell 2G connection';
+		states[Connection.CELL_3G] = 'Cell 3G connection';
+		states[Connection.CELL_4G] = 'Cell 4G connection';
+		states[Connection.NONE] = 'No network connection';
+		
+		document.getElementById('lbUsers').innerHTML = '<h3>The connection you have is: ' + states[networkState] + '</h3>';
+	}
+	
+    </script>
+</head>
+<body>
+<h3>Check for a Network Connection</h3>
+<input id="btnKlick" type="button" disabled="true" value="What connection do I have?" onClick="readConnection()">
+<br><br> 
+<div id="lbUsers"></div> 
+</body>
+</html>

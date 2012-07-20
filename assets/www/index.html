@@ -4,38 +4,12 @@
     <meta charset="UTF-8">
     <title>Hello PhoneGap Storage</title>
     <link rel="stylesheet" type="text/css" href="css/styles.css" />
-    <script type="text/javascript" charset="utf-8" src="cordova-1.8.1.js"></script>
-    <script type="text/javascript" charset="utf-8">
-    
-    // Wait for Cordova to load
-    //
-    document.addEventListener("deviceready", onDeviceReady, false);
-		
-	// Cordova is ready let's get stated with the database stuff
-    //
-    function onDeviceReady(){
-		if(!window.openDatabase){
-		    alert('Databases are no supported on this device');
-		    return;
-		}
-		
-		db = openDatabase(shortName, version, displayName, maxSize);
-		// alert('Successfully opened the database');
-		
-		db.transaction(function(tx){
-		  tx.executeSql(createStatement, [], nullHandler,errorHandler);
-		},errorHandler,successCallBack);
-		
-		listDBValues();
-	    
-	}
-	
-    </script>
 </head>
 <body>
 <h2>PhoneGap Test Apps 1.7.1</h2>
 <ul>
  <li><a href='sqlite.html'>PhoneGap SQLite</a></li>
+ <li><a href='network.html'>PhoneGap Network</a></li>
  <li><a href='gwcall.html'>SAP GW call demo</a></li>
 </ul>
 </body>
