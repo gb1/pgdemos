@@ -1,0 +1,124 @@
+<!DOCTYPE HTML>
+<html manifest="" lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <title>Call SAP Gateway</title>
+    <script type="text/javascript" charset="utf-8" src="cordova-1.8.1.js"></script>
+    <script type="text/javascript" charset="utf-8" src="base64.js"></script>  
+    <script type="text/javascript" charset="utf-8">
+    
+    // Wait for Cordova to load
+    //
+    document.addEventListener("deviceready", onDeviceReady, false);
+	
+
+	// Cordova is ready let's get stated with the database stuff
+    //
+    function onDeviceReady(){
+		if(!window.openDatabase){
+		    alert('Databases are no supported on this device');
+		    return;
+		}
+		
+		db = openDatabase(shortName, version, displayName, maxSize);
+		// alert('Successfully opened the database');
+		
+		db.transaction(function(tx){
+		  tx.executeSql(createStatement, [], nullHandler,errorHandler);
+		},errorHandler,successCallBack);
+		
+		listDBValues();
+	    
+	}
+	
+
+	function makeBasicAuth(uname, pword){
+	   var tok = uname + ':' + pword;
+	   var hash = Base64.encode(tok);
+	   return "Basic " + hash;
+	}
+	
+	function readFromWeb(callback){
+	        // encode username and password in basica authentication
+	        var auth = makeBasicAuth('I809781','SdF68nB3');
+			var req = new XMLHttpRequest();	
+			req.open("GET", "http://gw.esworkplace.sap.com/sap/opu/odata/IWBEP/RMTSAMPLEFLIGHT_2/TravelAgencies/?$format=json", true);
+			req.setRequestHeader('Authorization', auth);
+
+			// writing some information that we are retrieving data to the screen
+			document.getElementById('lbUsers').innerHTML = "<h3>sending the request...</h3>";
+			
+			req.onreadystatechange=function(){
+				if(req.readyState == 4 && (req.status==200)){
+					// get the type of response
+					var type = req.getResponseHeader("Content-Type");
+					if (type.indexOf("application/json") !== -1){
+						var agencytab = "<table class='altrowstable'><th>Agency:</th><th>Phone:</th><th>City:</th><th>Street:</th>";
+						var obj = JSON.parse(req.responseText);
+						for (var i = 0; i < obj.d.results.length; i++ ){
+							if(i % 2 == 0){
+								agencytab = agencytab + "<tr class='evenrowcolor'>";
+							} else {
+								agencytab = agencytab + "<tr class='oddrowcolor'>";
+							}
+							agencytab = agencytab + "<td>" + obj.d.results[i].Name + "</td><td>" 
+									+ obj.d.results[i].City + "</td><td>" + obj.d.results[i].TelephoneNumber
+									 + "</td><td>" + obj.d.results[i].Street +  "</td></tr>";
+						}
+						var agencytab = agencytab + "</table>"
+						document.getElementById('lbUsers').innerHTML = agencytab;
+					} else {
+					    console.log("Type is: " + type); 
+				    	document.getElementById('lbUsers').innerHTML = "<textarea id='txArea' cols='63' rows='60'>" + req.responseText + "</textarea>";
+				    }
+				}
+			}
+			// send the request now
+			req.send();
+	
+	}
+	
+	function displaySalesOrders(salesorders){
+		
+	}
+	
+    </script>
+    <style type="text/css">
+			table.altrowstable {
+				font-family: verdana,arial,sans-serif;
+				font-size:11px;
+				color:#333333;
+				border-width: 1px;
+				border-color: #a9c6c9;
+				border-collapse: collapse;
+			}
+			table.altrowstable th {
+				border-width: 1px;
+				padding: 8px;
+				border-style: solid;
+				border-color: #a9c6c9;
+			}
+			table.altrowstable td {
+				border-width: 1px;
+				padding: 8px;
+				border-style: solid;
+				border-color: #a9c6c9;
+			}
+			.oddrowcolor{
+				background-color:#d4e3e5;
+			}
+			.evenrowcolor{
+				background-color:#c3dde0;
+			}
+</style>
+</head>
+<body bgcolor="#c3dde0">
+<h2>List of Flight Agencies via SAP Gateway 2.0 SP4 and JSON</h2>
+<ul>
+ <li><a href='index.html'>list demos</a></li>
+</ul>
+<input type="button" value="Call SAP Gateway" onClick="readFromWeb()">
+<br><br> 
+<div id="lbUsers"></div> 
+</body>
+</html>

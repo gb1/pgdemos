@@ -1,0 +1,116 @@
+<!DOCTYPE HTML>
+<html manifest="" lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <title>Hello PhoneGap Storage</title>
+    <script type="text/javascript" charset="utf-8" src="cordova-1.8.1.js"></script>
+    <script type="text/javascript" charset="utf-8" src="jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" charset="utf-8">
+    
+    // Global Variables
+    var db;
+    var shortName = 'WebSqlDB';
+    var version = '1.0';
+    var displayName = 'WebSqlDB';
+    var maxSize = 65535;
+    var createStatement = 'CREATE TABLE IF NOT EXISTS User(UserId INTEGER NOT NULL PRIMARY KEY, FirstName TEXT NOT NULL, LastName TEXT NOT NULL)';
+    
+    
+    // Wait for Cordova to load
+    //
+    document.addEventListener("deviceready", onDeviceReady, false);
+		
+	// Called when the SQL statement is executed successfully
+	function successCallBack() {
+	   console.log('DEBUGGING: success');
+	}
+	
+	// Called when the SQL statement executed with errors
+	function errorHandler(tx, err){
+	   console.log('Error: ' + err.message + ' code: ' + err.code);
+	}
+	
+	function nullHandler(){
+	}
+		
+	// Cordova is ready let's get stated with the database stuff
+    //
+    function onDeviceReady(){
+		if(!window.openDatabase){
+		    alert('Databases are no supported on this device');
+		    return;
+		}
+		
+		db = openDatabase(shortName, version, displayName, maxSize);
+		// alert('Successfully opened the database');
+		
+		db.transaction(function(tx){
+		  tx.executeSql(createStatement, [], nullHandler,errorHandler);
+		},errorHandler,successCallBack);
+		
+		listDBValues();
+	    
+	}
+
+	function listDBValues(){
+	   if(!window.openDatabase){
+	       alert('Database is not supported on this device');
+	       return;
+	   }
+	   $('#lbUsers').html('');
+	   db.transaction(function(tx){
+	      tx.executeSql('SELECT * FROM User;', [],
+	         function(transaction, result) {
+	            if(result != null && result.rows != null){
+	               for (var i = 0; i < result.rows.length; i++){
+	                   var row = result.rows.item(i);
+	                   $('#lbUsers').append('<br>' + row.UserId + '. ' + row.FirstName + ' ' + row.LastName);
+	               }
+	            }
+	      }, errorHandler);
+	   },errorHandler,nullHandler);
+	   return;
+	}
+	
+	
+	function addValueToDB(){
+	   if(!window.openDatabase){
+	     alert('Database is not supported on this device');
+	     return;
+	   }
+	   db.transaction(function(tx){
+	      tx.executeSql('INSERT INTO User(FirstName, LastName) VALUES (?,?)',[$('#txFirstName').val(), $('#txLastName').val()],nullHandler,errorHandler);
+	   });
+	   listDBValues();
+	   return false;  
+	}
+	
+	function deleteDBValues(){
+	   if(!window.openDatabase){
+	      alert('Database is not supported on this device');
+	      return;
+	   }
+	   db.transaction(function(tx){
+	      tx.executeSql('DROP TABLE User',[],nullHandler,errorHandler);
+	      tx.executeSql(createStatement,[],nullHandler,errorHandler);
+	   });
+	   listDBValues();
+	   return false;
+	}
+
+	
+    </script>
+</head>
+<body bgcolor="#c3dde0">
+<h2>PhoneGap Test Apps 1.0</h2>
+<ul>
+ <li><a href='index.html'>list demos</a></li>
+</ul>
+<input id="txFirstName" type="text" placeholder="FirstName"> 
+<input id="txLastName" type="text" placeholder="LastName"><br>
+<input type="button" value="Add record" onClick="addValueToDB()">
+<input type="button" value="Delete all entries" onClick="deleteDBValues()">
+<br><br> 
+<div id="lbUsers"></div> 
+</body>
+</html>
