@@ -22,8 +22,7 @@
 
 # Directories #
 ######################
-bin/
-gen/
+bin
 
 # Logs and databases #
 ######################
@@ -40,4 +39,5 @@ gen/
 .Trashes
 Icon?
 ehthumbs.db
-Thumbs.db
+Thumbs.dbbin
+
