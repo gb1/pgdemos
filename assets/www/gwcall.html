@@ -20,23 +20,33 @@
 	    document.getElementById('btnKlick').disabled = false;
 	}
 	
-
+    // Construct a Basic Authentication header for the HTML request to ES Workplace
 	function makeBasicAuth(uname, pword){
 	   var tok = uname + ':' + pword;
 	   var hash = Base64.encode(tok);
 	   return "Basic " + hash;
 	}
 	
-	function readFromWeb(callback){
-	        // start by checking if there is any type of network connection
+	
+	// Make a call to read the list of Flight-Agencies from the ES Workplace
+	function getAgencies(uname, pword){
+	
+	        // check if the user has entered a username and password
+	        if(uname.length == 0 && (pword.length == 0)){
+	           alert("Please specify your username and password for ES Workplace");
+	           return;
+	        }
+	
+	        // start by checking if there is any type of network connection by using the Network API of
+	        // PhoneGap. If not connection exits exit.
 	        if(navigator.network.connection.type === Connection.UNKNOWN || navigator.network.connection.type === Connection.NONE){
-	             document.getElementById('lbUsers').innerHTML = 'I cannot detect a suitable network connection to call ES Workplace. ' +
-	                  'Please make sure you have a network available before trying again';
+	             alert('I cannot detect a suitable network connection to call ES Workplace. ' +
+	                  'Please make sure you have a network available before trying again');
 	             return;
 	        }
 	
 	        // encode username and password in basica authentication
-	        var auth = makeBasicAuth('I809781','SdF68nB3');
+	        var auth = makeBasicAuth(uname, pword);
 			var req = new XMLHttpRequest();	
 			req.open("GET", "http://gw.esworkplace.sap.com/sap/opu/odata/IWBEP/RMTSAMPLEFLIGHT_2/TravelAgencies/?$format=json", true);
 			req.setRequestHeader('Authorization', auth);
@@ -78,7 +88,9 @@
 </head>
 <body>
 <h3>List of Flight-Agencies via SAP Gateway 2.0 SP4 and JSON</h3>
-<input id="btnKlick" type="button" value="Call SAP Gateway" onClick="readFromWeb()">
+<div><table><tr><td>ES Workplace User:</td><td><input type="text" name="eswpuser" id="uname" ></td></tr>
+<tr><td>Password: </td><td><input type="password" name="eswppwd" id="pword"></td></tr></table></div>
+<input id="btnKlick" type="button" value="Get Agencies" onClick="getAgencies(uname.value, pword.value)">
 <br><br> 
 <div id="lbUsers"></div> 
 </body>
