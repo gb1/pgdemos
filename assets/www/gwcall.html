@@ -31,18 +31,18 @@
 	// Make a call to read the list of Flight-Agencies from the ES Workplace
 	function getAgencies(uname, pword){
 	
-	        // check if the user has entered a username and password
-	        if(uname.length == 0 && (pword.length == 0)){
-	           alert("Please specify your username and password for ES Workplace");
-	           return;
-	        }
-	
-	        // start by checking if there is any type of network connection by using the Network API of
+		    // start by checking if there is any type of network connection by using the Network API of
 	        // PhoneGap. If not connection exits exit.
 	        if(navigator.network.connection.type === Connection.UNKNOWN || navigator.network.connection.type === Connection.NONE){
 	             alert('I cannot detect a suitable network connection to call ES Workplace. ' +
 	                  'Please make sure you have a network available before trying again');
 	             return;
+	        }
+	
+	        // check if the user has entered a username and password
+	        if(uname.length == 0 && (pword.length == 0)){
+	           alert("Please specify your username and password for ES Workplace");
+	           return;
 	        }
 	
 	        // encode username and password in basica authentication
