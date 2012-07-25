@@ -8,13 +8,11 @@
     <script type="text/javascript" charset="utf-8" src="base64.js"></script>  
     <script type="text/javascript" charset="utf-8">
     
-    // Wait for Cordova to load
-    //
+    // Wait for PhoneGap to load
     document.addEventListener("deviceready", onDeviceReady, false);
 	
 
-	// Cordova is ready let's get stated with the database stuff
-    //
+	// PhoneGap is ready let's get stated with the database stuff
     function onDeviceReady(){
 	    // enable the button now that the device is ready
 	    document.getElementById('btnKlick').disabled = false;
@@ -77,6 +75,8 @@
 					    console.log("Type is: " + type); 
 				    	document.getElementById('lbUsers').innerHTML = "<textarea id='txArea' cols='63' rows='60'>" + req.responseText + "</textarea>";
 				    }
+				} else if(req.readyState === 4 && (req.status=401)){
+				    alert("The authorization you provided does not work on ES Workplace");
 				}
 			}
 			// send the request now

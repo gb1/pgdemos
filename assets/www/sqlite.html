@@ -17,8 +17,7 @@
     var createStatement = 'CREATE TABLE IF NOT EXISTS User(UserId INTEGER NOT NULL PRIMARY KEY, FirstName TEXT NOT NULL, LastName TEXT NOT NULL)';
     
     
-    // Wait for Cordova to load
-    //
+    // Wait for PhoneGap to load
     document.addEventListener("deviceready", onDeviceReady, false);
 		
 	// Called when the SQL statement is executed successfully
@@ -31,11 +30,11 @@
 	   console.log('Error: ' + err.message + ' code: ' + err.code);
 	}
 	
+	// dummy functionality that is used for callbacks in SQLLight doing nothing
 	function nullHandler(){
 	}
 		
-	// Cordova is ready let's get stated with the database stuff
-    //
+	// PhoneGap is ready let's get stated with the database stuff
     function onDeviceReady(){
 		if(!window.openDatabase){
 		    alert('Databases are no supported on this device');
@@ -53,6 +52,7 @@
 	    
 	}
 
+	// List the Values from the Database
 	function listDBValues(){
 	   if(!window.openDatabase){
 	       alert('Database is not supported on this device');
@@ -73,7 +73,7 @@
 	   return;
 	}
 	
-	
+	// Add a value to the database
 	function addValueToDB(){
 	   if(!window.openDatabase){
 	     alert('Database is not supported on this device');
